@@ -1,3 +1,4 @@
+// gestione variabili d'ambiente
 import { config } from "dotenv";
 config();
 
@@ -9,6 +10,7 @@ import fantacalcioRouter from "./routes/fantacalcio";
 const app = express();
 const port = Number(process.env.PORT) || 3000;
 
+// middleware per i logs
 app.use(morgan('tiny'));
 
 app.use("/", indexRouter);
