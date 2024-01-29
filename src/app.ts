@@ -12,6 +12,7 @@ const port = Number(process.env.PORT) || 3000;
 
 // middleware per i logs
 app.use(morgan('tiny'));
+app.use(express.json());
 
 app.use("/", indexRouter);
 app.use("/api/fanta", fantacalcioRouter);

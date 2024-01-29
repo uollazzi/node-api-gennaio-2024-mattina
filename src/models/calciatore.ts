@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// MODELLI DB
 const calciatoreSchema = new mongoose.Schema({
     nome: { type: String, required: [true, "Nome obbligatorio"] },
     dataNascita: { type: Date, required: [true, "Data nascita obbligatoria"] },
@@ -11,3 +12,48 @@ const calciatoreSchema = new mongoose.Schema({
 });
 
 export const Calciatore = mongoose.model("Calciatore", calciatoreSchema, "calciatori");
+// MODELLI DB
+
+// MODELLI API
+export class CalciatoreAddDTO {
+    constructor(
+        public nome: string,
+        public dataNascita: number,
+        public piede: string,
+        public ruolo: string,
+        public numero: string,
+        public squadra: string,
+        public infortunato: boolean,
+    ) {
+
+    }
+}
+
+export interface ICalciatore {
+    id: string;
+    nome: string;
+    dataNascita: number;
+    piede: string;
+    ruolo: string;
+    numero: string;
+    squadra: string;
+    infortunato: boolean;
+}
+// MODELLI API
+
+export const convertToCalciatore = (calciatore: any): ICalciatore => {
+
+    const c: ICalciatore = {
+        id: calciatore._id,
+        nome: calciatore.nome,
+        dataNascita: calciatore.dataNascita.getTime(),
+        piede: calciatore.piede,
+        ruolo: calciatore.ruolo,
+        squadra: calciatore.squadra,
+        numero: calciatore.numero,
+        infortunato: calciatore.infortunato
+    }
+
+    return c;
+}
+
