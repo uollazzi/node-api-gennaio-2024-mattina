@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { CalciatoreModel, CalciatoreAddDTO } from "./models/calciatore";
+import { CalciatoreModel, CalciatoreAddDTO, TrasferimentoDTO } from "./models/calciatore";
 
 export const getCalciatori = async () => {
     try {
@@ -43,6 +43,29 @@ export const addCalciatore = async (calciatore: CalciatoreAddDTO) => {
         c.infortunato = calciatore.infortunato;
 
         return await c.save();
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+    finally {
+        await mongoose.disconnect();
+    }
+};
+
+export const trasferisciById = async (id: string, datiTrasferimento: TrasferimentoDTO) => {
+    try {
+        await mongoose.connect(process.env.MONGODB_CONNECTION_STRING!, { dbName: "fantacalcio" });
+
+        const calciatore = await CalciatoreModel.findById(id);
+
+        if (calciatore) {
+            calciatore.squadra = datiTrasferimento.squadra;
+            calciatore.numero = datiTrasferimento.numero;
+
+            return await calciatore.save();
+        }
+
+        return undefined;
     } catch (error) {
         console.error(error);
         throw error;

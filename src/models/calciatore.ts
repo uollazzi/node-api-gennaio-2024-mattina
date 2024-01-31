@@ -40,10 +40,15 @@ export interface ICalciatore {
     squadra: string;
     infortunato: boolean;
 }
+
+export interface TrasferimentoDTO {
+    squadra: string;
+    numero: string;
+}
+
 // MODELLI API
 
 export const convertToCalciatore = (calciatore: Calciatore): ICalciatore => {
-
     const c: ICalciatore = {
         id: calciatore.id,
         nome: calciatore.nome,

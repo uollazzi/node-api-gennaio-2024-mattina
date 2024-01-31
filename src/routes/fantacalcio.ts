@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import * as db from "../db";
-import { CalciatoreAddDTO, convertToCalciatore } from "../models/calciatore";
+import { CalciatoreAddDTO, TrasferimentoDTO, convertToCalciatore } from "../models/calciatore";
 
 const router = Router();
 
@@ -35,12 +35,29 @@ router.post("/", async (req: Request, res: Response) => {
         console.log(calciatore);
 
         const r = await db.addCalciatore(calciatore);
-        res.json(r);
+        res.json(convertToCalciatore(r));
+    } catch (error) {
+        res.status(500).json({ message: "Qualcosa è andato storto." });
+    }
+});  // CRUD
+
+router.post("/trasferimento/:id", async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id;
+        const trasferimento: TrasferimentoDTO = req.body;
+        console.log(trasferimento);
+
+        const r = await db.trasferisciById(id, trasferimento);
+
+        if (r) {
+            res.json(convertToCalciatore(r));
+        } else {
+            res.status(404).json({ message: "Calciatore non trovato" });
+        }
     } catch (error) {
         res.status(500).json({ message: "Qualcosa è andato storto." });
     }
 });
-
 
 
 export default router;
