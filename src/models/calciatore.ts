@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { HydratedDocument, InferSchemaType } from "mongoose";
 
 // MODELLI DB
 const calciatoreSchema = new mongoose.Schema({
@@ -8,10 +8,11 @@ const calciatoreSchema = new mongoose.Schema({
     ruolo: { type: String, required: [true, "Ruolo obbligatorio"] },
     numero: { type: String, required: [true, "Numero obbligatorio"] },
     squadra: { type: String, required: [true, "Squadra obbligatorio"] },
-    infortunato: { type: Boolean, default: false }
+    infortunato: { type: Boolean, default: false },
 });
 
-export const Calciatore = mongoose.model("Calciatore", calciatoreSchema, "calciatori");
+export type Calciatore = HydratedDocument<InferSchemaType<typeof calciatoreSchema>>;
+export const CalciatoreModel = mongoose.model("Calciatore", calciatoreSchema, "calciatori");
 // MODELLI DB
 
 // MODELLI API
@@ -41,10 +42,10 @@ export interface ICalciatore {
 }
 // MODELLI API
 
-export const convertToCalciatore = (calciatore: any): ICalciatore => {
+export const convertToCalciatore = (calciatore: Calciatore): ICalciatore => {
 
     const c: ICalciatore = {
-        id: calciatore._id,
+        id: calciatore.id,
         nome: calciatore.nome,
         dataNascita: calciatore.dataNascita.getTime(),
         piede: calciatore.piede,
