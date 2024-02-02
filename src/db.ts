@@ -1,11 +1,17 @@
 import mongoose from "mongoose";
 import { CalciatoreModel, CalciatoreAddDTO, TrasferimentoDTO } from "./models/calciatore";
 
-export const getCalciatori = async () => {
+export const getCalciatori = async (page: number = 1, pageSize: number = 20, squadra?: string) => {
     try {
         await mongoose.connect(process.env.MONGODB_CONNECTION_STRING!, { dbName: "fantacalcio" });
 
-        return await CalciatoreModel.find();
+        let search = {};
+
+        if (squadra) {
+            search = { squadra: squadra };
+        }
+
+        return await CalciatoreModel.find(search).skip((page - 1) * pageSize).limit(pageSize);
     } catch (error) {
         console.error(error);
         throw error;

@@ -6,7 +6,12 @@ const router = Router();
 
 router.get("/", async (req: Request, res: Response) => {
     try {
-        const calciatori = await db.getCalciatori();
+        // /?limit=20&page=1&squadra=Milan
+        const page = req.query.page ? Number(req.query.page) : 1;
+        const limit = req.query.limit ? Number(req.query.limit) : 20;
+        const squadra = req.query.squadra ? String(req.query.squadra) : undefined;
+
+        const calciatori = await db.getCalciatori(page, limit, squadra);
         res.json(calciatori.map(c => convertToCalciatore(c)));
     } catch (error) {
         res.status(500).json({ message: "Qualcosa è andato storto." });
